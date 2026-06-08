@@ -3,6 +3,9 @@
 ### Description
 Airdrop via Merkel Tree, have functionality to sign via ECDSA  
 
+### Purpose
+Part of Advanced Foundry course from Cyfrin Updraft and as submodule in [appropriate repository](https://github.com/kuzminklk/cyfrin-updraft)  
+
 ### Technologies
 Merkle Tree, ERC-191, ERC-712, ECDSA  
 
@@ -22,7 +25,7 @@ Install Foundry dependences:
 
 ### Usage
 Basic Foundry commands: ```forge build```, ```forge test```  
-Other appropriate commands in ```./commands.bash```  
+Other appropriate commands in ```./commands.sh```   
 Additional:
 1. Add allowed addresses into ```./script/target/input.json``` or run script “Generate Input”  
 2. Generate Merkle Tree for that input via ```./script/target/GenerateMerkleTree```
