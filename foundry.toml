@@ -3,7 +3,14 @@
 src = "src"
 out = "out"
 libs = ["lib"]
-fs_permissions = [{ access = "read-write", path = "./script/target" }, { access = "read-write", path = "./broadcast" }]
+fs_permissions = [
+	{ access = "read-write", path = "./script/target" },
+	{ access = "read-write", path = "./broadcast" },
+]
+
+[fmt]
+style = "tab"
+tab_width = 2
 
 [invariant]
 runs = 128

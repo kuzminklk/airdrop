@@ -10,10 +10,12 @@ Part of Advanced Foundry course from Cyfrin Updraft and as submodule in [appropr
 
 ### Technologies
 
+Development: Visual Studio Code  
 Programming language: Solidity  
 Environment: Foundry  
 Network: Ethereum  
-Standards: Merkle Tree, ERC-191, ERC-712, ECDSA
+Standards: Merkle Tree, ERC-191, ERC-712, ECDSA  
+Formatting: “.editorconfig”, “.vscode/…”, Foundry, Prettier  
 
 ## State
 
@@ -31,7 +33,7 @@ Finished, tested locally, deployed to testnet and tested
 
 ### Set Up
 
-Install Foundry dependences: `forge install`
+Install Foundry dependencies: `forge install`
 
 ### Use
 

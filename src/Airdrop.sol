@@ -1,21 +1,18 @@
-
-
-// SPDX-License-Identifier: MIT  
+// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.26;
 
-import { IERC20, SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import { MerkleProof } from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
-import { EIP712 } from "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
-import { ECDSA } from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-
+import {IERC20, SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+import {EIP712} from "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
+import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
- * @author kuzminklk
- * @notice Airdrop sender
- * @dev Implements Merkle Trees for airdrop allowing
- * @dev Implements ECDSA signing and EIP712 standart for user ability to pay fees for another account
+ *	@author kuzminklk
+ *	@notice Airdrop sender
+ *	@dev Implements Merkle Trees for airdrop allowing
+ *	@dev Implements ECDSA signing and EIP712 standart for user ability to pay fees for another account
  */
 contract Airdrop is EIP712, Ownable {
 	using SafeERC20 for IERC20;
@@ -43,26 +40,32 @@ contract Airdrop is EIP712, Ownable {
 		i_token = _token;
 	}
 
-	function setMerkleRoot(bytes32 _merkleRoot) public onlyOwner() {
+	function setMerkleRoot(bytes32 _merkleRoot) public onlyOwner {
 		s_merkleRoot = _merkleRoot;
 	}
-
 
 	// — Claim —
 
 	/**
-	* @notice Claim airdrop for an “msg.sender”
-	* @dev External part of a function
-	*/
+	 *	@notice Claim airdrop for an “msg.sender”
+	 *	@dev External part of a function
+	 */
 	function claim(uint256 _amount, bytes32[] calldata _merkleProof) external {
 		_claim(msg.sender, _amount, _merkleProof);
 	}
 
 	/**
-	* @notice Claim airdrop for an account with appropriate sign
-	* @dev External part of a function
-	*/
-	function claimWithSignature(address _account, uint256 _amount, bytes32[] calldata _merkleProof, uint8 _v, bytes32 _r, bytes32 _s) external {
+	 *	@notice Claim airdrop for an account with appropriate sign
+	 *	@dev External part of a function
+	 */
+	function claimWithSignature(
+		address _account,
+		uint256 _amount,
+		bytes32[] calldata _merkleProof,
+		uint8 _v,
+		bytes32 _r,
+		bytes32 _s
+	) external {
 		// 1. Check the signature
 		if (!_isValidSignature(_account, getMessageHash(_account, _amount), _v, _r, _s)) {
 			revert Airdrop__InvalidSignature();
@@ -73,9 +76,9 @@ contract Airdrop is EIP712, Ownable {
 	}
 
 	/**
-	* @notice Claim airdrop for an account
-	* @dev Internal part of a function
-	*/
+	 *	@notice Claim airdrop for an account
+	 *	@dev Internal part of a function
+	 */
 	function _claim(address _account, uint256 _amount, bytes32[] calldata _merkleProof) internal {
 		// 1. Check if account already has claimed
 		if (s_hasClaimed[_account]) {
@@ -98,18 +101,18 @@ contract Airdrop is EIP712, Ownable {
 		i_token.safeTransfer(_account, _amount);
 	}
 
-
 	// — Signature —
 
 	function getMessageHash(address _account, uint256 _amount) public view returns (bytes32 digest) {
-		return _hashTypedDataV4(
-			keccak256(abi.encode(MESSAGE_TYPEHASH, Claim({ account: _account, amount: _amount})))
-		);
+		return _hashTypedDataV4(keccak256(abi.encode(MESSAGE_TYPEHASH, Claim({account: _account, amount: _amount}))));
 	}
 
-	function _isValidSignature(address _account, bytes32 _digest, uint8 _v, bytes32 _r, bytes32 _s) internal pure returns (bool) {
-		(address actualSigner, , ) = ECDSA.tryRecover(_digest, _v, _r, _s);
+	function _isValidSignature(address _account, bytes32 _digest, uint8 _v, bytes32 _r, bytes32 _s)
+		internal
+		pure
+		returns (bool)
+	{
+		(address actualSigner,,) = ECDSA.tryRecover(_digest, _v, _r, _s);
 		return actualSigner == _account;
 	}
-
 }
